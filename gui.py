@@ -23,7 +23,17 @@ def add_entry(entry):
     print(to_do_list)
     checkbox = customtkinter.CTkCheckBox(master = frame, text=entry)
     checkbox.grid(sticky="w", pady=2, padx=10)
+    checkbox.bind("<Double-Button-1>", on_checkbox_double_click)
     to_do_entry.delete(0, 'end')
+
+def on_checkbox_double_click(event):
+    checkbox = event.widget
+    former_text = checkbox.cget('text')
+    selected_item = to_do_list.index(former_text)
+    edit_checkbox = simpledialog.askstring("Edit checkbox:", "Edit checkbox", initialvalue=former_text)
+    to_do_list[selected_item] = edit_checkbox
+    checkbox.configure(text=edit_checkbox)
+
 
 #saves list of entries to Obsidian
 def saveToObsidian():
@@ -37,7 +47,6 @@ def saveToFile(file_path, data):
     with open(file_path, 'w') as file:
         for item in data:
             file.write('- [ ] '+ str(item) + '\n')
-    
 
 #connecting to Obsidian functionality
 def connectObsidian():
@@ -48,17 +57,19 @@ def connectObsidian():
     
 #customtkinter frame setup
 frame = customtkinter.CTkScrollableFrame(master=root)
-frame.pack(pady=20, padx=60, fill="both", expand=True)
+frame.grid(pady=20, padx=60, sticky="nsew")
+
 
 #Tkinter Main Frame Widget Setup
 label = customtkinter.CTkLabel(master=frame, text="To-Do List", font=("Roboto", 24))
-label.grid(row=0, column=0, pady=12, padx=10)
+label.grid(row=0, column=0, pady=12, padx=5)
+label.grid_rowconfigure(0, weight=1)
 to_do_entry = customtkinter.CTkEntry(master=frame, placeholder_text="Add New Entry")
-to_do_entry.grid(row = 0, column=2, pady=12, padx=10)
+to_do_entry.grid(row = 0, column=2, pady=12, padx=5)
 to_do_entry_submission = customtkinter.CTkButton(master=frame, text="Add Entry", command= lambda: add_entry(to_do_entry.get()))
-to_do_entry_submission.grid(row=0, column=3, pady=2, padx=10)
+to_do_entry_submission.grid(row=0, column=3, pady=2, padx=5)
 save_file_button = customtkinter.CTkButton(master=frame, text="Save to file", command=saveToObsidian)
-save_file_button.grid(row=0, column=4, pady=5, padx=10)
+save_file_button.grid(row=0, column=4, pady=5, padx=5)
 
 #syncing with obsidian widget setup
 obsidian_setup = customtkinter.CTkButton(master=frame, text="Connect to obsidian vault", command=connectObsidian)
