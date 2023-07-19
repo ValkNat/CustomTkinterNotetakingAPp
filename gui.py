@@ -30,13 +30,13 @@ def saveToObsidian():
     with open('vault_location.txt', 'r') as file:
         vault_location = file.read()
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        file_path = os.path.join(vault_location, 'to-do' + timestamp + '.md')
+        file_path = os.path.join(vault_location, 'to-do ' + timestamp + '.md')
         saveToFile(file_path, to_do_list)
 
 def saveToFile(file_path, data):
     with open(file_path, 'w') as file:
         for item in data:
-            file.write(str(item) + '\n')
+            file.write('- [ ] '+ str(item) + '\n')
     
 
 #connecting to Obsidian functionality
